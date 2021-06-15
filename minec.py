@@ -50,7 +50,7 @@ def step():
     for i in data:
         if i == '\n':
             data.pop(j)
-        elif i.startswith('@') or len(i) >= 10:
+        elif i.startswith('@') or len(i) >= 20:
             data.pop(j)
         else:
             d.append(i)
@@ -85,6 +85,8 @@ def step():
             direct.rightClick()
         elif d[i].strip().startswith('wait'):
             wait(d[i])
+        elif d[i].strip().startswith('keep'):
+            keep(d[i].strip())
         else :
             direct.press(d[i].strip())
 
@@ -94,6 +96,9 @@ def loop_(l):
             for i in l:
                 if i.startswith('wait'):
                     wait(i)
+                elif i.startswith('keep'):
+                    print('i')
+                    keep(i)
                 elif i.strip() == 'click':
                     direct.click()
                 elif i.strip() == 'rclick':
@@ -103,10 +108,42 @@ def loop_(l):
     except KeyboardInterrupt:
         ask()
 
+def keep(s):
+    print('a')
+    if s[4] == '(':
+        i = 5
+        while True:
+            if len(s) <= i:
+                print('keep命令文に ) がありません')
+                raise
+            elif s[i] == ')':
+                print('b')
+                break
+            i+=1
+        key = s[5:i]
+        if s[i+1] == ':':
+            print("k",key)
+            num = s[i+1:]
+            f = decimal(num)
+            print('num',f)
+            direct.keyDown(key)
+            time.sleep(f)
+            direct.keyUp(key)
+        else: 
+            print('b2')
+    else :
+        raise "keep error"
+        
+
 def wait(s):
-    ma = re.search(r'([0-9]+)?\.[0-9]+|[0-9]+\.|([0-9]+|([0-9]+)?\.[0-9]+|[0-9]+\.)[eE][-+][0-9]+',s)
-    print("待機中:",ma,"秒")
-    time.sleep(float(ma.group(0)))
+    f = decimal(s)
+    print('待機:',f)
+    time.sleep(f)
+
+def decimal(f):
+    ma = re.search(r'([0-9]+)?\.[0-9]+|[0-9]+\.|([0-9]+|([0-9]+)?\.[0-9]+|[0-9]+\.)[eE][-+][0-9]+',f)
+    return float(ma.group(0))
+
 
 if __name__ == "__main__":
     main()

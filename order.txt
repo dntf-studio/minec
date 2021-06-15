@@ -3,6 +3,7 @@
 @ 一度の指定で一度キーを入力します。
 
 esc
+@aaa
 wait:1.0
 loop
 wait:0.7
