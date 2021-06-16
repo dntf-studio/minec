@@ -9,6 +9,8 @@ clr.AddReference('components1_cs')
 from components1_cs import Class1
 
 # -*- coding: utf-8 -*-
+
+# grammer: <key>,loop,!loop,wait:<time>,keep(<key>):<time>
 def main():
     try:
         print("マインクラフトのウィンドウ名を入力してください")
