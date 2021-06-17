@@ -1,4 +1,5 @@
 from typing import Text
+from win32gui import GetWindowText,GetForegroundWindow
 import pydirectinput as direct
 import time
 import clr
@@ -10,16 +11,25 @@ from components1_cs import Class1
 
 # -*- coding: utf-8 -*-
 
-# grammer: <key>,loop,!loop,wait:<time>,keep(<key>):<time>
+# dntf-studio @2021
+# ちょっと汚い書き方かも。。↓
+file_ = open('order.txt', 'r', encoding='UTF-8') 
+data = file_.readlines()
 def main():
     try:
-        print("マインクラフトのウィンドウ名を入力してください")
-        r1 = input(">> Minecraft ")
-        activeWindow("Minecraft "+r1)
-        ask()
+        print("ターゲットのウィンドウ名を入力してください")
+        r1 = input(">> "+init_title().strip())
+        activeWindow(init_title().strip()+r1)
 
     except KeyboardInterrupt:
         print("\nプログラムを終了します...")
+
+def init_title():
+    name = data[0]
+    if name.startswith('+'):
+        return name[1:]
+    else :
+        return 'Minecraft'
 
 def activeWindow(n):
     try:
@@ -27,7 +37,9 @@ def activeWindow(n):
         cs.SetWindowActive()
         #direct.keyDown('esc')
         #direct.keyUp('esc')
-        step()
+        # アクティブウィンドウ取得
+        print('取得したウィンドウ: '+GetWindowText(GetForegroundWindow()))
+        step(n)
 
     except:
         print("なにか問題が発生しました。")
@@ -41,11 +53,15 @@ def ask():
     elif r2.strip().upper() == 'N' :
         main()
     else:
+        print('>> Y or N << ')
         ask()
 
-def step():
-    file_ = open('order.txt', 'r', encoding='UTF-8') 
-    data = file_.readlines()
+def comfilm(w):
+    if not w == GetWindowText(GetForegroundWindow()):
+        print('ウィンドウが入力されたものではなくなりました。\n命令を中止します。')
+    return w == GetWindowText(GetForegroundWindow())
+
+def step(n):
     d = []
     j=0
     #なぜか普通に動かない配列操作。。
@@ -75,7 +91,7 @@ def step():
                     f = True
                     eol = dd+i
                     print("ループされる処理:",loop)
-                    loop_(loop)
+                    loop_(loop,n)
                     break
                 else :
                     if not dd == i:
@@ -92,7 +108,7 @@ def step():
         else :
             direct.press(d[i].strip())
 
-def loop_(l):
+def loop_(l,w):
     try:
         while True:
             for i in l:
@@ -107,11 +123,12 @@ def loop_(l):
                     direct.rightClick()
                 else:
                     direct.press(i.strip())
+            if not comfilm(w):
+                main()
     except KeyboardInterrupt:
         ask()
 
 def keep(s):
-    print('a')
     if s[4] == '(':
         i = 5
         while True:
@@ -119,7 +136,6 @@ def keep(s):
                 print('keep命令文に ) がありません')
                 raise
             elif s[i] == ')':
-                print('b')
                 break
             i+=1
         key = s[5:i]
@@ -132,7 +148,7 @@ def keep(s):
             time.sleep(f)
             direct.keyUp(key)
         else: 
-            print('b2')
+            print('存在しないキーを入力しようとしています。')
     else :
         raise "keep error"
         
