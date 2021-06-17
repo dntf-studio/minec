@@ -18,8 +18,12 @@ data = file_.readlines()
 def main():
     try:
         print("ターゲットのウィンドウ名を入力してください")
-        r1 = input(">> "+init_title().strip())
-        activeWindow(init_title().strip()+r1)
+        if not init_title() == None:
+            r1 = input(">> "+init_title().strip())
+            activeWindow(init_title().strip()+r1)
+        else:
+            r1 = input(">> ")
+            activeWindow(r1)
 
     except KeyboardInterrupt:
         print("\nプログラムを終了します...")
@@ -30,7 +34,7 @@ def init_title():
     if name.startswith('+') and not name == '+':
         return name[1:]
     elif name == '+':
-        return ''
+        return None
     else :
         return 'Minecraft'
 
@@ -71,7 +75,7 @@ def step(n):
     for i in data:
         if i == '\n':
             data.pop(j)
-        elif i.startswith('@') or len(i) >= 20:
+        elif i.startswith('@') or i.startswith('+') or len(i) >= 20:
             data.pop(j)
         else:
             d.append(i)
