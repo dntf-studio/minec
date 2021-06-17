@@ -23,6 +23,7 @@ def main():
 
     except KeyboardInterrupt:
         print("\nプログラムを終了します...")
+        sys.exit()
 
 def init_title():
     name = data[0]
