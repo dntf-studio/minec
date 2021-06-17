@@ -27,8 +27,10 @@ def main():
 
 def init_title():
     name = data[0]
-    if name.startswith('+'):
+    if name.startswith('+') and not name == '+':
         return name[1:]
+    elif name == '+':
+        return ''
     else :
         return 'Minecraft'
 
