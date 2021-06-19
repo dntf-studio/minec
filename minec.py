@@ -122,7 +122,6 @@ def loop_(l,w):
                 if i.startswith('wait'):
                     wait(i)
                 elif i.startswith('keep'):
-                    print('i')
                     keep(i)
                 elif i.strip() == 'click':
                     direct.click()
@@ -147,10 +146,8 @@ def keep(s):
             i+=1
         key = s[5:i]
         if s[i+1] == ':':
-            print("k",key)
             num = s[i+1:]
             f = decimal(num)
-            print('num',f)
             direct.keyDown(key)
             time.sleep(f)
             direct.keyUp(key)
